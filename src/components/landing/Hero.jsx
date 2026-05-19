@@ -30,7 +30,7 @@ export default function Hero({ onOpenApp }) {
         </p>
 
         <div className="hero-meta">
-          <button className="btn btn-primary" onClick={onOpenApp} style={{border: 'none', background: 'inherit', padding: 'inherit', display: 'inherit'}}>
+          <button className="btn btn-primary" onClick={onOpenApp}>
             Abrir la app Verdex
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>

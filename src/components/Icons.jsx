@@ -12,4 +12,5 @@ export const Icons = {
   qr: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3zM13 13h4M19 13v6M13 17v4M17 17h4" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   trophy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M8 4h8v6a4 4 0 01-8 0V4zM6 4H4v3a3 3 0 003 3M18 4h2v3a3 3 0 01-3 3M10 16h4v3h2l1 2H7l1-2h2v-3z" strokeLinejoin="round"/></svg>,
   leaf: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15zM5 19l8-8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+  campus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>,
 }
