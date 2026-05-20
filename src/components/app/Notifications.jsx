@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 
 function timeAgo(ts) {
   const diff = Date.now() - ts
@@ -75,19 +76,47 @@ const BG = { welcome: 'var(--green-soft)', deposit: 'var(--green-soft)', redeem:
 const CLR = { welcome: 'var(--green)', deposit: 'var(--green)', redeem: 'var(--amber-deep)', milestone: 'var(--amber-deep)' }
 
 export default function Notifications({ state, position = 'up' }) {
-  const [open, setOpen]     = useState(false)
-  const [read, setRead]     = useState(() => {
+  const [open, setOpen]   = useState(false)
+  const [panelStyle, setPanelStyle] = useState({})
+  const [read, setRead]   = useState(() => {
     try { return JSON.parse(localStorage.getItem('vdx.notif.read') || '[]') } catch { return [] }
   })
+  const btnRef   = useRef(null)
   const panelRef = useRef(null)
 
-  const notes = buildNotifications(state)
+  const notes  = buildNotifications(state)
   const unread = notes.filter(n => !read.includes(n.id)).length
 
-  // Close on outside click
+  const calcPosition = () => {
+    if (!btnRef.current) return
+    const r = btnRef.current.getBoundingClientRect()
+    const panelW = 320
+    const panelH = 480
+    if (position === 'up') {
+      // Above the button, aligned left
+      setPanelStyle({
+        top: Math.max(8, r.top - Math.min(panelH, r.top - 8)),
+        left: Math.min(r.left, window.innerWidth - panelW - 8),
+      })
+    } else {
+      // Below the button, aligned right
+      setPanelStyle({
+        top: r.bottom + 8,
+        left: Math.max(8, r.right - panelW),
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (open) calcPosition()
+  }, [open])
+
   useEffect(() => {
     const handler = (e) => {
-      if (panelRef.current && !panelRef.current.contains(e.target)) setOpen(false)
+      if (
+        panelRef.current && !panelRef.current.contains(e.target) &&
+        btnRef.current   && !btnRef.current.contains(e.target)
+      ) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -105,18 +134,12 @@ export default function Notifications({ state, position = 'up' }) {
     localStorage.setItem('vdx.notif.read', JSON.stringify(next))
   }
 
-  return (
-    <div className="notif-wrap" ref={panelRef}>
-      <button className="app-icon-btn notif-btn" onClick={() => setOpen(o => !o)}>
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 7a4 4 0 018 0c0 5 2 6 2 6H3s2-1 2-6z"/>
-          <path d="M7 15a2 2 0 004 0"/>
-        </svg>
-        {unread > 0 && <span className="notif-badge">{unread > 9 ? '9+' : unread}</span>}
-      </button>
-
-      {open && (
-        <div className={`notif-panel${position === 'down' ? ' notif-panel-down' : ''}`}>
+  const panel = open ? (
+    <div
+      ref={panelRef}
+      className="notif-panel"
+      style={{ position: 'fixed', ...panelStyle }}
+    >
           <div className="notif-panel-head">
             <span className="notif-panel-title">Notificaciones</span>
             {unread > 0 && (
@@ -149,7 +172,19 @@ export default function Notifications({ state, position = 'up' }) {
             })}
           </div>
         </div>
-      )}
-    </div>
+      </div>
+  ) : null
+
+  return (
+    <>
+      <button ref={btnRef} className="app-icon-btn notif-btn" onClick={() => setOpen(o => !o)}>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 7a4 4 0 018 0c0 5 2 6 2 6H3s2-1 2-6z"/>
+          <path d="M7 15a2 2 0 004 0"/>
+        </svg>
+        {unread > 0 && <span className="notif-badge">{unread > 9 ? '9+' : unread}</span>}
+      </button>
+      {createPortal(panel, document.body)}
+    </>
   )
 }
