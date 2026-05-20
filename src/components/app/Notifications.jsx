@@ -89,20 +89,21 @@ export default function Notifications({ state, position = 'up' }) {
 
   const calcPosition = () => {
     if (!btnRef.current) return
-    const r = btnRef.current.getBoundingClientRect()
+    const r   = btnRef.current.getBoundingClientRect()
     const panelW = 320
-    const panelH = 480
     if (position === 'up') {
-      // Above the button, aligned left
+      // Anclar el borde INFERIOR del panel al borde superior del botón
       setPanelStyle({
-        top: Math.max(8, r.top - Math.min(panelH, r.top - 8)),
-        left: Math.min(r.left, window.innerWidth - panelW - 8),
+        bottom:    window.innerHeight - r.top + 8,
+        left:      Math.min(r.left, window.innerWidth - panelW - 8),
+        maxHeight: Math.min(480, r.top - 16),
       })
     } else {
-      // Below the button, aligned right
+      // Abrir hacia abajo desde el botón, alineado a la derecha
       setPanelStyle({
-        top: r.bottom + 8,
+        top:  r.bottom + 8,
         left: Math.max(8, r.right - panelW),
+        maxHeight: Math.min(480, window.innerHeight - r.bottom - 16),
       })
     }
   }
