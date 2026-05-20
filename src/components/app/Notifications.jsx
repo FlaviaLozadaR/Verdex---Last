@@ -172,8 +172,7 @@ export default function Notifications({ state, position = 'up' }) {
               )
             })}
           </div>
-        </div>
-      </div>
+    </div>
   ) : null
 
   return (
