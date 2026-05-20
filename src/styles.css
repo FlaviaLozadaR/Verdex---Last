@@ -2499,9 +2499,9 @@ footer {
 @keyframes notif-pop { from { transform: scale(0); } to { transform: scale(1); } }
 
 /* default: panel opens UP (for sidebar) */
-.notif-wrap { position: relative; z-index: 2000; }
+.notif-wrap { position: relative; z-index: 9999; }
 .notif-panel {
-  position: fixed; bottom: auto; top: 72px; right: 16px; left: auto;
+  position: absolute; bottom: calc(100% + 10px); left: 0;
   width: 320px; max-height: 480px;
   background: var(--paper);
   border: 1px solid var(--rule);
@@ -2514,7 +2514,7 @@ footer {
 }
 @keyframes notif-slide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 /* panel opens DOWN (for mobile header) */
-.notif-panel-down { top: 64px; right: 8px; }
+.notif-panel-down { bottom: auto; top: calc(100% + 10px); left: auto; right: 0; }
 @keyframes notif-slide-down { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .notif-panel-down { animation: notif-slide-down .2s ease; }
 
