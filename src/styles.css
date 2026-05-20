@@ -2499,21 +2499,22 @@ footer {
 @keyframes notif-pop { from { transform: scale(0); } to { transform: scale(1); } }
 
 /* default: panel opens UP (for sidebar) */
+.notif-wrap { position: relative; z-index: 2000; }
 .notif-panel {
-  position: absolute; bottom: calc(100% + 10px); left: 0;
+  position: fixed; bottom: auto; top: 72px; right: 16px; left: auto;
   width: 320px; max-height: 480px;
   background: var(--paper);
   border: 1px solid var(--rule);
   border-radius: 18px;
   box-shadow: 0 16px 48px -12px rgba(0,0,0,0.18);
-  z-index: 200;
+  z-index: 9999;
   display: flex; flex-direction: column;
   overflow: hidden;
   animation: notif-slide .2s ease;
 }
 @keyframes notif-slide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 /* panel opens DOWN (for mobile header) */
-.notif-panel-down { bottom: auto; top: calc(100% + 10px); left: auto; right: 0; }
+.notif-panel-down { top: 64px; right: 8px; }
 @keyframes notif-slide-down { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 .notif-panel-down { animation: notif-slide-down .2s ease; }
 
