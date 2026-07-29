@@ -1,4 +1,4 @@
-// Google Identity Services — solo Client ID, sin Firebase ni backend
+  // Google Identity Services — solo Client ID, sin Firebase ni backend
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID
 
 function decodeJWT(token) {

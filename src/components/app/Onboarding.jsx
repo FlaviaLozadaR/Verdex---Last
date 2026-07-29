@@ -110,6 +110,10 @@ export default function Onboarding({ onSubmit }) {
                 <button className="login-demo-btn" onClick={() => onSubmit({ name: 'Demo Verdex', email: 'demo@verdex.bo', uni: 'UPSA', seed: true })}>
                   Explorar con demo
                 </button>
+
+                <button className="login-demo-btn login-demo-btn-empresa" onClick={() => onSubmit({ name: 'Andrés Melgar', email: 'empresa@verdex.bo', uni: 'Empresa privada', role: 'empresa', company: 'Grupo Nortex S.A.', seed: true })}>
+                  Explorar como empresa
+                </button>
               </div>
             </>
           )}

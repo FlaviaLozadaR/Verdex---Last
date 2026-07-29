@@ -8,6 +8,8 @@ const initialState = {
   name: "",
   email: "",
   uni: "UPSA",
+  role: "usuario",
+  company: "",
   points: 0,
   totalEarned: 0,
   kg: 0,
@@ -34,6 +36,7 @@ import CampusMap from './CampusMap'
 import LevelsPage from './LevelsPage'
 import Profile from './Profile'
 import Notifications from './Notifications'
+import Empresa from './Empresa'
 
 export default function Shell() {
   const navigate = useNavigate()
@@ -47,6 +50,8 @@ export default function Shell() {
   const pathname = location.pathname
   const activeTab = pathname.split('/')[2] || 'home'
   const scanActive = pathname.endsWith('/scan')
+  const isEmpresa = state.role === 'empresa'
+  const homeRoute = isEmpresa ? 'empresa' : 'home'
 
   const fmtTime = () => {
     const d = new Date()
@@ -86,6 +91,14 @@ export default function Shell() {
     }
   }
 
+  const handleSwitchRole = () => {
+    setState((s) => {
+      const nextRole = s.role === 'empresa' ? 'usuario' : 'empresa'
+      navigate(`/app/${nextRole === 'empresa' ? 'empresa' : 'home'}`, { replace: true })
+      return { ...s, role: nextRole }
+    })
+  }
+
   const handleReset = () => {
     if (confirm("¿Reiniciar progreso a cero? No se puede deshacer.")) {
       setState((s) => ({ ...s, points: 0, totalEarned: 0, kg: 0, txns: [], redemptions: [] }))
@@ -109,31 +122,46 @@ export default function Shell() {
               </button>
             </div>
             <nav className="app-sidebar-nav">
-              <button className="app-sidebar-item" data-on={activeTab === 'home'} onClick={() => go('home')}>{Icons.home}<span>Inicio</span></button>
-              <button className="app-sidebar-item" data-on={activeTab === 'rewards'} onClick={() => go('rewards')}>{Icons.rewards}<span>Canjear</span></button>
-              <button className="app-sidebar-item app-sidebar-scan" onClick={() => navigate('/app/scan')}>{Icons.scan}<span>Escanear</span></button>
-              <button className="app-sidebar-item" data-on={activeTab === 'map'} onClick={() => go('map')}>{Icons.map}<span>Puntos</span></button>
-              <button className="app-sidebar-item" data-on={activeTab === 'campus'} onClick={() => go('campus')}>{Icons.campus}<span>Mapa</span></button>
-              <button className="app-sidebar-item" data-on={activeTab === 'levels'} onClick={() => go('levels')}>{Icons.trophy}<span>Nivel</span></button>
+              {isEmpresa ? (
+                <button className="app-sidebar-item" data-on={activeTab === 'empresa'} onClick={() => go('empresa')}>{Icons.building}<span>Dashboard</span></button>
+              ) : (
+                <>
+                  <button className="app-sidebar-item" data-on={activeTab === 'home'} onClick={() => go('home')}>{Icons.home}<span>Inicio</span></button>
+                  <button className="app-sidebar-item" data-on={activeTab === 'rewards'} onClick={() => go('rewards')}>{Icons.rewards}<span>Canjear</span></button>
+                  <button className="app-sidebar-item app-sidebar-scan" onClick={() => navigate('/app/scan')}>{Icons.scan}<span>Escanear</span></button>
+                  <button className="app-sidebar-item" data-on={activeTab === 'map'} onClick={() => go('map')}>{Icons.map}<span>Puntos</span></button>
+                  <button className="app-sidebar-item" data-on={activeTab === 'campus'} onClick={() => go('campus')}>{Icons.campus}<span>Mapa</span></button>
+                  <button className="app-sidebar-item" data-on={activeTab === 'levels'} onClick={() => go('levels')}>{Icons.trophy}<span>Nivel</span></button>
+                </>
+              )}
             </nav>
-            {/* Recycling chain widget */}
-            <div className="sb-chain">
-              <div className="sb-chain-plants" aria-hidden="true">
-                <svg width="28" height="32" viewBox="0 0 28 32" fill="none"><path d="M14 30L14 16" stroke="#3d8a52" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 22C14 22 8 18 8 12C11 10 14 15 14 22Z" fill="#4a9e62" opacity="0.8"/><path d="M14 18C14 18 20 14 20 8C17 6 14 11 14 18Z" fill="#3d8a52" opacity="0.85"/><path d="M14 16C14 16 10 10 14 4C18 10 14 16 14 16Z" fill="#56b870" opacity="0.8"/></svg>
-                <svg width="22" height="26" viewBox="0 0 22 26" fill="none" style={{marginLeft:-4}}><path d="M11 24L11 13" stroke="#3d8a52" strokeWidth="1.3" strokeLinecap="round"/><path d="M11 18C11 18 6 15 6 10C9 8 11 13 11 18Z" fill="#4a9e62" opacity="0.7"/><path d="M11 15C11 15 16 12 16 7C13 5 11 10 11 15Z" fill="#3d8a52" opacity="0.75"/></svg>
+            {isEmpresa ? (
+              /* Role-switch widget (demo convenience) */
+              <div className="sb-role">
+                <div className="sb-role-title">Modo empresa</div>
+                <p className="sb-role-desc">Estás viendo el panel ESG hardcodeado para presentaciones.</p>
+                <button className="sb-role-btn" onClick={handleSwitchRole}>Volver a vista usuario</button>
               </div>
-              <div className="sb-chain-title">¿A dónde va tu plástico?</div>
-              <div className="sb-chain-flow">
-                <span>Contenedor</span>
-                <span className="sb-arrow">→</span>
-                <span>Verdex</span>
-                <span className="sb-arrow">→</span>
-                <span>Empacar S.A.</span>
-                <span className="sb-arrow">→</span>
-                <span>Nueva botella</span>
+            ) : (
+              /* Recycling chain widget */
+              <div className="sb-chain">
+                <div className="sb-chain-plants" aria-hidden="true">
+                  <svg width="28" height="32" viewBox="0 0 28 32" fill="none"><path d="M14 30L14 16" stroke="#3d8a52" strokeWidth="1.5" strokeLinecap="round"/><path d="M14 22C14 22 8 18 8 12C11 10 14 15 14 22Z" fill="#4a9e62" opacity="0.8"/><path d="M14 18C14 18 20 14 20 8C17 6 14 11 14 18Z" fill="#3d8a52" opacity="0.85"/><path d="M14 16C14 16 10 10 14 4C18 10 14 16 14 16Z" fill="#56b870" opacity="0.8"/></svg>
+                  <svg width="22" height="26" viewBox="0 0 22 26" fill="none" style={{marginLeft:-4}}><path d="M11 24L11 13" stroke="#3d8a52" strokeWidth="1.3" strokeLinecap="round"/><path d="M11 18C11 18 6 15 6 10C9 8 11 13 11 18Z" fill="#4a9e62" opacity="0.7"/><path d="M11 15C11 15 16 12 16 7C13 5 11 10 11 15Z" fill="#3d8a52" opacity="0.75"/></svg>
+                </div>
+                <div className="sb-chain-title">¿A dónde va tu plástico?</div>
+                <div className="sb-chain-flow">
+                  <span>Contenedor</span>
+                  <span className="sb-arrow">→</span>
+                  <span>Verdex</span>
+                  <span className="sb-arrow">→</span>
+                  <span>Empacar S.A.</span>
+                  <span className="sb-arrow">→</span>
+                  <span>Nueva botella</span>
+                </div>
+                <p className="sb-chain-desc">Pagan Bs 2/kg — ingreso que sostiene la app sin que pagues nada.</p>
               </div>
-              <p className="sb-chain-desc">Pagan Bs 2/kg — ingreso que sostiene la app sin que pagues nada.</p>
-            </div>
+            )}
 
             <div className="app-sidebar-foot">
               <Notifications state={state} />
@@ -184,14 +212,17 @@ export default function Shell() {
               </button>
             </div>
             <nav className="mob-drawer-nav">
-              {[
+              {(isEmpresa ? [
+                { tab: 'empresa', icon: Icons.building, label: 'Dashboard' },
+                { tab: 'profile', icon: Icons.user,     label: 'Perfil' },
+              ] : [
                 { tab: 'home',    icon: Icons.home,    label: 'Inicio' },
                 { tab: 'rewards', icon: Icons.rewards, label: 'Canjear' },
                 { tab: 'map',     icon: Icons.map,     label: 'Puntos' },
                 { tab: 'campus',  icon: Icons.campus,  label: 'Mapa' },
                 { tab: 'levels',  icon: Icons.trophy,  label: 'Nivel' },
                 { tab: 'profile', icon: Icons.user,    label: 'Perfil' },
-              ].map(({ tab, icon, label }) => (
+              ]).map(({ tab, icon, label }) => (
                 <button
                   key={tab}
                   className={'mob-drawer-item' + (activeTab === tab ? ' active' : '')}
@@ -200,9 +231,11 @@ export default function Shell() {
                   {icon}<span>{label}</span>
                 </button>
               ))}
-              <button className="mob-drawer-scan" onClick={() => { navigate('/app/scan'); setDrawerOpen(false) }}>
-                {Icons.scan}<span>Escanear</span>
-              </button>
+              {!isEmpresa && (
+                <button className="mob-drawer-scan" onClick={() => { navigate('/app/scan'); setDrawerOpen(false) }}>
+                  {Icons.scan}<span>Escanear</span>
+                </button>
+              )}
             </nav>
           </div>
 
@@ -210,11 +243,20 @@ export default function Shell() {
 
           {showTabbar && (
             <div className="app-tabbar">
-              <button className="app-tab" data-on={activeTab === 'home'} onClick={() => go('home')}>{Icons.home}<span>Inicio</span></button>
-              <button className="app-tab" data-on={activeTab === 'rewards'} onClick={() => go('rewards')}>{Icons.rewards}<span>Canjear</span></button>
-              <button className="app-tab fab" data-on={scanActive} onClick={() => navigate('/app/scan')}>{Icons.scan}<span>Escanear</span></button>
-              <button className="app-tab" data-on={activeTab === 'map'} onClick={() => go('map')}>{Icons.map}<span>Puntos</span></button>
-              <button className="app-tab" data-on={activeTab === 'levels'} onClick={() => go('levels')}>{Icons.trophy}<span>Nivel</span></button>
+              {isEmpresa ? (
+                <>
+                  <button className="app-tab" data-on={activeTab === 'empresa'} onClick={() => go('empresa')}>{Icons.building}<span>Dashboard</span></button>
+                  <button className="app-tab" data-on={activeTab === 'profile'} onClick={() => go('profile')}>{Icons.user}<span>Perfil</span></button>
+                </>
+              ) : (
+                <>
+                  <button className="app-tab" data-on={activeTab === 'home'} onClick={() => go('home')}>{Icons.home}<span>Inicio</span></button>
+                  <button className="app-tab" data-on={activeTab === 'rewards'} onClick={() => go('rewards')}>{Icons.rewards}<span>Canjear</span></button>
+                  <button className="app-tab fab" data-on={scanActive} onClick={() => navigate('/app/scan')}>{Icons.scan}<span>Escanear</span></button>
+                  <button className="app-tab" data-on={activeTab === 'map'} onClick={() => go('map')}>{Icons.map}<span>Puntos</span></button>
+                  <button className="app-tab" data-on={activeTab === 'levels'} onClick={() => go('levels')}>{Icons.trophy}<span>Nivel</span></button>
+                </>
+              )}
             </div>
           )}
 
@@ -237,13 +279,15 @@ export default function Shell() {
         showSidebar: false,
         bodyStyle: { padding: 0 },
         children: (
-          <Onboarding onSubmit={({ name, email, uni, seed }) => {
+          <Onboarding onSubmit={({ name, email, uni, seed, role, company }) => {
             const next = {
               ...initialState,
               signedIn: true,
               name,
               email,
               uni,
+              role: role || 'usuario',
+              company: company || '',
               points: seed ? 3840 : 0,
               totalEarned: seed ? 4150 : 0,
               kg: seed ? 14.6 : 0,
@@ -259,7 +303,7 @@ export default function Shell() {
               ] : [],
             }
             setState(next)
-            navigate('/app/home', { replace: true })
+            navigate(next.role === 'empresa' ? '/app/empresa' : '/app/home', { replace: true })
           }} />
         ),
       })
@@ -269,16 +313,17 @@ export default function Shell() {
   return renderFrame({
     children: (
       <Routes>
-        <Route index element={<Navigate to="/app/home" replace />} />
-        <Route path="login" element={<Navigate to="/app/home" replace />} />
+        <Route index element={<Navigate to={`/app/${homeRoute}`} replace />} />
+        <Route path="login" element={<Navigate to={`/app/${homeRoute}`} replace />} />
         <Route path="home" element={<Home state={state} go={go} openScan={() => navigate('/app/scan')} />} />
+        <Route path="empresa" element={<Empresa state={state} onSwitchRole={handleSwitchRole} notify={showToast} />} />
         <Route path="rewards" element={<Rewards state={state} onRedeem={handleRedeem} />} />
         <Route path="map" element={<MapPage />} />
         <Route path="campus" element={<CampusMap />} />
         <Route path="levels" element={<LevelsPage state={state} />} />
-        <Route path="profile" element={<Profile state={state} onLogout={handleLogout} onReset={handleReset} />} />
+        <Route path="profile" element={<Profile state={state} onLogout={handleLogout} onReset={handleReset} onSwitchRole={handleSwitchRole} />} />
         <Route path="scan" element={<Scan state={state} onDeposit={handleDeposit} onClose={() => navigate('/app/home')} />} />
-        <Route path="*" element={<Navigate to="/app/home" replace />} />
+        <Route path="*" element={<Navigate to={`/app/${homeRoute}`} replace />} />
       </Routes>
     ),
   })

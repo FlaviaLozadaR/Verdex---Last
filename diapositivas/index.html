@@ -1,0 +1,651 @@
+<title>Verdex — Guía de estudio del pitch</title>
+<style>
+  :root{
+    --bg:#F4F1E7;
+    --bg-elevated:#FFFFFF;
+    --bg-sunken:#EAE4D2;
+    --ink:#20301F;
+    --muted:#6E6656;
+    --line:rgba(32,48,31,.16);
+    --moss:#3E7A55;
+    --moss-strong:#2C5C3D;
+    --amber:#C97A2E;
+    --teal:#296671;
+    --rust:#AE4B2A;
+    --focus:#296671;
+
+    --font-display:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif;
+    --font-body:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --font-mono:"Cascadia Code",Consolas,"SFMono-Regular",Menlo,ui-monospace,monospace;
+
+    --fs-cover:clamp(3rem,9vw,7rem);
+    --fs-word:clamp(2.5rem,6.5vw,5.5rem);
+    --fs-idea:clamp(1.15rem,.8vw + 1rem,1.55rem);
+    --fs-quote:clamp(1rem,.4vw + .85rem,1.3rem);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#141F1A;
+      --bg-elevated:#1C2A22;
+      --bg-sunken:#101A14;
+      --ink:#ECE7D8;
+      --muted:#A79E88;
+      --line:rgba(236,231,216,.14);
+      --moss:#6FBE8F;
+      --moss-strong:#8FD4AA;
+      --amber:#E3A15F;
+      --teal:#6FBAC5;
+      --rust:#E2795A;
+      --focus:#8FD4AA;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141F1A; --bg-elevated:#1C2A22; --bg-sunken:#101A14; --ink:#ECE7D8; --muted:#A79E88;
+    --line:rgba(236,231,216,.14); --moss:#6FBE8F; --moss-strong:#8FD4AA; --amber:#E3A15F;
+    --teal:#6FBAC5; --rust:#E2795A; --focus:#8FD4AA;
+  }
+  :root[data-theme="light"]{
+    --bg:#F4F1E7; --bg-elevated:#FFFFFF; --bg-sunken:#EAE4D2; --ink:#20301F; --muted:#6E6656;
+    --line:rgba(32,48,31,.16); --moss:#3E7A55; --moss-strong:#2C5C3D; --amber:#C97A2E;
+    --teal:#296671; --rust:#AE4B2A; --focus:#296671;
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  .deck{
+    height:100dvh;
+    min-height:560px;
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+  }
+
+  /* ---------- topbar ---------- */
+  .deck-topbar{
+    display:flex;align-items:center;gap:1rem;
+    padding:.85rem 1.25rem;
+    border-bottom:1px solid var(--line);
+    flex:0 0 auto;
+  }
+  .brand{
+    all:unset;cursor:pointer;display:flex;align-items:center;gap:.5rem;
+    font-family:var(--font-mono);font-weight:700;letter-spacing:.08em;font-size:.85rem;color:var(--ink);
+  }
+  .brand:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px;}
+  .brand-mark{width:1.15rem;height:1.15rem;color:var(--moss);flex:0 0 auto;}
+  .deck-progress{flex:1;height:2px;background:var(--line);border-radius:2px;overflow:hidden;}
+  .deck-progress-fill{height:100%;width:0%;background:var(--moss);transition:width .4s ease;}
+  .deck-meta{
+    font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
+    white-space:nowrap;display:flex;gap:.4rem;align-items:baseline;
+  }
+
+  /* ---------- stage ---------- */
+  .deck-stage{position:relative;flex:1;min-height:0;overflow:hidden;}
+  .slide{
+    position:absolute;inset:0;
+    opacity:0;transform:translateY(14px);
+    pointer-events:none;
+    transition:opacity .5s ease, transform .5s ease;
+    overflow-y:auto;
+  }
+  .slide.is-active{opacity:1;transform:translateY(0);pointer-events:auto;}
+  @media (prefers-reduced-motion: reduce){
+    .slide{transition:opacity .15s linear;transform:none;}
+  }
+  .slide::after{
+    content:attr(data-index);
+    position:absolute;top:.25rem;right:1.5rem;
+    font-family:var(--font-display);font-weight:700;font-size:9rem;line-height:1;
+    color:var(--accent);opacity:.07;pointer-events:none;z-index:0;
+  }
+  .slide-cover::after{content:none;}
+  .slide[data-accent="moss"]{--accent:var(--moss);}
+  .slide[data-accent="amber"]{--accent:var(--amber);}
+  .slide[data-accent="teal"]{--accent:var(--teal);}
+  .slide[data-accent="rust"]{--accent:var(--rust);}
+
+  .slide-inner{
+    position:relative;z-index:1;height:100%;
+    display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(1.5rem,3vw,3.5rem);
+    align-items:center;
+    padding:clamp(1.5rem,4vw,3.5rem) clamp(1.5rem,5vw,4.5rem);
+  }
+  @media (max-width:760px){
+    .slide-inner{grid-template-columns:1fr;align-content:start;padding-top:2rem;}
+  }
+
+  .badge-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+  .badge-icon{width:1.6rem;height:1.6rem;color:var(--accent);flex:0 0 auto;}
+  .slide-kicker{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.1em;color:var(--muted);}
+  .timing-chip{
+    margin-left:auto;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);
+    border:1px solid var(--accent);border-radius:999px;padding:.15rem .55rem;
+  }
+
+  .slide-word{
+    font-family:var(--font-display);font-weight:700;font-size:var(--fs-word);
+    line-height:.98;margin:0 0 1.1rem;text-wrap:balance;
+  }
+  .idea-eyebrow{
+    font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;color:var(--accent);
+    margin:0 0 .35rem;
+  }
+  .idea-line{
+    font-family:var(--font-display);font-style:italic;font-size:var(--fs-idea);
+    margin:0 0 1.1rem;text-wrap:balance;
+  }
+  .stage-cue{
+    font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;color:var(--accent);
+    margin:0 0 .6rem;
+  }
+  .pitch-quote{
+    margin:0 0 1.15rem;padding-left:1rem;border-left:2px solid var(--line);
+    font-size:var(--fs-quote);line-height:1.55;color:var(--muted);
+  }
+  .point-list{margin:0 0 1rem;padding:0;list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+  .point-list li{display:flex;gap:.6rem;line-height:1.4;}
+  .point-list li::before{content:"—";color:var(--accent);flex:0 0 auto;}
+  .pull-quote{
+    grid-column:1 / -1;margin:.5rem 0 0;
+    font-family:var(--font-display);font-style:italic;
+    font-size:clamp(1.3rem,1.4vw + 1rem,2rem);line-height:1.3;color:var(--ink);
+    border-top:1px solid var(--line);padding-top:1.1rem;text-wrap:balance;
+  }
+
+  .slide-visual{position:relative;min-height:120px;}
+
+  /* ---------- hook flow ---------- */
+  .flow-hook{display:flex;align-items:center;gap:1.1rem;flex-wrap:wrap;}
+  .flow-node{
+    display:flex;flex-direction:column;align-items:center;gap:.5rem;
+    padding:1rem;border:1px solid var(--line);border-radius:.6rem;background:var(--bg-elevated);
+    min-width:6.5rem;text-align:center;font-size:.85rem;
+  }
+  .flow-node svg{width:1.6rem;height:2.4rem;color:var(--accent);}
+  .flow-glyph-arrow{font-family:var(--font-display);font-size:2.2rem;color:var(--accent);}
+  .flow-branches{display:flex;flex-direction:column;gap:.6rem;}
+  .flow-branches .flow-node{min-width:9rem;flex-direction:row;justify-content:flex-start;padding:.6rem .9rem;}
+  .flow-branches .flow-node svg{width:1.1rem;height:1.1rem;}
+
+  /* ---------- problema columns ---------- */
+  .problem-row{display:flex;align-items:stretch;gap:.4rem;}
+  .problem-card{
+    flex:1;padding:1rem;border:1px solid var(--line);border-radius:.6rem;background:var(--bg-elevated);
+    display:flex;flex-direction:column;gap:.5rem;
+  }
+  .problem-card strong{font-family:var(--font-display);font-size:1.05rem;}
+  .problem-card span{font-size:.82rem;color:var(--muted);line-height:1.4;}
+  .broken-glyph{width:1.4rem;height:1.4rem;color:var(--rust);align-self:center;flex:0 0 auto;}
+  @media (max-width:760px){.problem-row{flex-direction:column;}.broken-glyph{transform:rotate(90deg);}}
+
+  /* ---------- ecosystem ---------- */
+  .ecosystem{display:flex;gap:1.25rem;}
+  .eco-spine{display:flex;align-items:center;position:relative;padding-right:1.25rem;flex:0 0 auto;}
+  .eco-spine::after{content:"";position:absolute;right:0;top:8%;bottom:8%;width:2px;background:var(--line);}
+  .eco-hub{
+    display:flex;flex-direction:column;align-items:center;gap:.35rem;
+    padding:1rem .9rem;border-radius:.7rem;background:var(--bg-elevated);border:1px solid var(--accent);
+    font-family:var(--font-mono);font-weight:700;font-size:.75rem;letter-spacing:.06em;
+  }
+  .eco-hub svg{width:1.5rem;height:1.5rem;color:var(--accent);}
+  .eco-rows{flex:1;display:flex;flex-direction:column;gap:1rem;justify-content:center;min-width:0;}
+  .eco-row{display:flex;align-items:center;gap:.6rem;}
+  .eco-actor,.eco-outcome{font-size:.86rem;white-space:nowrap;}
+  .eco-outcome{color:var(--accent);font-weight:600;}
+  .eco-connector{
+    flex:1;height:2px;min-width:1.5rem;
+    background-image:linear-gradient(to right, var(--accent) 55%, transparent 0);
+    background-size:9px 2px;background-repeat:repeat-x;
+    animation:flow-dash 1s linear infinite;
+  }
+  @keyframes flow-dash{to{background-position:-18px 0;}}
+  @media (prefers-reduced-motion: reduce){.eco-connector{animation:none;}}
+  @media (max-width:760px){.eco-row{flex-wrap:wrap;}.eco-connector{min-width:100%;order:3;height:1px;}}
+
+  /* ---------- flywheel ---------- */
+  .flywheel{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
+  .fw-step{
+    padding:.7rem .85rem;border:1px solid var(--line);border-radius:.6rem;background:var(--bg-elevated);
+    font-size:.8rem;line-height:1.3;max-width:9rem;
+  }
+  .fw-arrow{color:var(--accent);font-family:var(--font-display);font-size:1.4rem;flex:0 0 auto;}
+  .fw-loop{
+    width:100%;margin-top:.35rem;font-family:var(--font-mono);font-size:.72rem;color:var(--accent);
+    display:flex;align-items:center;gap:.4rem;
+  }
+
+  /* ---------- validación badges ---------- */
+  .badge-grid{display:flex;flex-direction:column;gap:.8rem;}
+  .achievement{display:flex;align-items:center;gap:.85rem;}
+  .medal{
+    width:2.6rem;height:2.6rem;border-radius:50%;flex:0 0 auto;
+    background:var(--accent);display:grid;place-items:center;position:relative;
+    font-family:var(--font-mono);font-weight:700;font-size:.65rem;color:var(--bg-elevated);
+  }
+  .medal::before,.medal::after{
+    content:"";position:absolute;top:78%;width:.55rem;height:.9rem;background:var(--accent);opacity:.55;
+  }
+  .medal::before{left:.15rem;clip-path:polygon(0 0,100% 0,60% 100%);}
+  .medal::after{right:.15rem;clip-path:polygon(0 0,100% 0,40% 100%);}
+  .medal.status{background:transparent;border:2px solid var(--accent);color:var(--accent);}
+  .medal.status::before,.medal.status::after{content:none;}
+  .achievement-title{font-weight:600;font-size:.92rem;}
+  .achievement-sub{font-size:.78rem;color:var(--muted);}
+
+  /* ---------- ask list ---------- */
+  .ask-list{display:flex;flex-direction:column;gap:.9rem;}
+  .ask-item{display:flex;align-items:center;gap:.75rem;}
+  .ask-item svg{width:1.7rem;height:1.7rem;color:var(--accent);flex:0 0 auto;}
+  .ask-item strong{display:block;font-size:.95rem;}
+
+  /* ---------- cover ---------- */
+  .slide-cover .slide-inner{grid-template-columns:1fr;align-content:center;justify-items:start;gap:1.4rem;}
+  .cover-eyebrow{font-family:var(--font-mono);font-size:.75rem;letter-spacing:.16em;color:var(--muted);margin:0;}
+  .cover-word{font-family:var(--font-display);font-weight:700;font-size:var(--fs-cover);margin:0;line-height:.95;}
+  .cover-chain{
+    font-family:var(--font-display);font-style:italic;font-size:clamp(1.1rem,1.4vw + .8rem,1.7rem);
+    margin:0;color:var(--muted);
+  }
+  .chain-arrow{color:var(--moss);font-style:normal;margin:0 .2rem;}
+  .cover-map{list-style:none;margin:.3rem 0 0;padding:0;border-left:2px solid var(--line);margin-left:.4rem;max-width:26rem;width:100%;}
+  .cover-map li{position:relative;padding:.4rem 0 .4rem 1.3rem;}
+  .cover-map li::before{
+    content:"";position:absolute;left:-5px;top:50%;transform:translateY(-50%);
+    width:8px;height:8px;border-radius:999px;background:var(--moss);
+  }
+  .cover-map button{all:unset;cursor:pointer;display:flex;align-items:baseline;gap:.7rem;width:100%;}
+  .cover-map button:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:4px;}
+  .map-num{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);}
+  .map-word{font-family:var(--font-display);font-style:italic;font-size:1.02rem;}
+  .cover-map button:hover .map-word,.cover-map button:focus-visible .map-word{color:var(--moss);}
+  .map-time{margin-left:auto;font-family:var(--font-mono);font-size:.68rem;color:var(--muted);}
+  .cover-footer{font-size:.82rem;color:var(--muted);margin:.2rem 0 0;}
+
+  /* ---------- bottombar ---------- */
+  .qr-card{
+    display:flex;align-items:center;gap:1.1rem;
+    padding:1.1rem 1.3rem;border:1px solid var(--line);border-radius:.7rem;background:var(--bg-elevated);
+    max-width:22rem;
+  }
+  .qr-card img{
+    width:6.5rem;height:6.5rem;border-radius:.3rem;background:#fff;padding:.35rem;flex:0 0 auto;
+  }
+  .qr-card > div{display:flex;flex-direction:column;gap:.3rem;min-width:0;}
+  .qr-label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.06em;color:var(--muted);}
+  .qr-url{font-family:var(--font-mono);font-size:.92rem;color:var(--accent);word-break:break-word;}
+
+  .deck-bottombar{
+    flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:1rem;
+    padding:.7rem 1rem;border-top:1px solid var(--line);
+  }
+  .nav-btn{
+    all:unset;cursor:pointer;width:2.1rem;height:2.1rem;border-radius:50%;
+    display:grid;place-items:center;border:1px solid var(--line);font-size:1.1rem;color:var(--ink);
+  }
+  .nav-btn:hover{border-color:var(--moss);color:var(--moss);}
+  .nav-btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+  .nav-btn:disabled{opacity:.3;cursor:default;}
+  .dot-nav{list-style:none;display:flex;gap:.4rem;margin:0;padding:0;}
+  .dot-nav button{
+    all:unset;cursor:pointer;width:1.7rem;height:1.7rem;border-radius:.4rem;
+    display:grid;place-items:center;color:var(--muted);
+  }
+  .dot-nav button svg{width:1.1rem;height:1.1rem;}
+  .dot-nav button.is-active{color:var(--moss);}
+  .dot-nav button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+  .deck-hint{
+    text-align:center;font-family:var(--font-mono);font-size:.66rem;color:var(--muted);
+    margin:0 0 .7rem;
+  }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+    </marker>
+    <symbol id="icon-chase" viewBox="0 0 32 32">
+      <path d="M16 3 L27 22 H5 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path>
+      <path d="M14.5 3.6 L20 9 L14 9 Z" fill="currentColor"></path>
+      <path d="M26.3 21.6 L20.5 24.8 L22.3 18.6 Z" fill="currentColor"></path>
+      <path d="M5.7 21.6 L11.5 24.8 L9.7 18.6 Z" fill="currentColor"></path>
+    </symbol>
+    <symbol id="icon-bottle" viewBox="0 0 24 40">
+      <path d="M9 2h6v5.5c0 1.1 1.15 1.7 1.9 2.8C18.1 12 18.6 13.4 18.6 15.5V36a2 2 0 0 1-2 2h-9.2a2 2 0 0 1-2-2V15.5c0-2.1.5-3.5 1.7-5.2.75-1.1 1.9-1.7 1.9-2.8V2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+      <line x1="6.4" y1="22" x2="17.6" y2="22" stroke="currentColor" stroke-width="1.2"></line>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="deck" id="deck">
+  <div class="deck-topbar">
+    <button class="brand" id="btn-home" type="button" aria-label="Ir a portada" data-jump="0">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+      <span>VERDEX</span>
+    </button>
+    <div class="deck-progress" aria-hidden="true"><div class="deck-progress-fill" id="progress-fill"></div></div>
+    <div class="deck-meta">
+      <span id="meta-count">00 / 08</span>
+      <span>·</span>
+      <span id="meta-time">0:00 / 3:10</span>
+    </div>
+  </div>
+
+  <main class="deck-stage" id="stage">
+
+    <section class="slide slide-cover is-active" data-index="0" data-accent="moss">
+      <div class="slide-inner">
+        <p class="cover-eyebrow">GUÍA DE ESTUDIO DEL PITCH</p>
+        <h1 class="cover-word">Verdex</h1>
+        <p class="cover-chain">Residuos <span class="chain-arrow">→</span> Datos <span class="chain-arrow">→</span> Impacto <span class="chain-arrow">→</span> Valor</p>
+        <ol class="cover-map">
+          <li><button type="button" data-jump="1"><span class="map-num">01</span><span class="map-word">Botella</span><span class="map-time">0:20</span></button></li>
+          <li><button type="button" data-jump="2"><span class="map-num">02</span><span class="map-word">Quién soy</span><span class="map-time">0:10</span></button></li>
+          <li><button type="button" data-jump="3"><span class="map-num">03</span><span class="map-word">Sistema roto</span><span class="map-time">0:30</span></button></li>
+          <li><button type="button" data-jump="4"><span class="map-num">04</span><span class="map-word">Ecosistema Verdex</span><span class="map-time">0:35</span></button></li>
+          <li><button type="button" data-jump="5"><span class="map-num">05</span><span class="map-word">Modelo B2B</span><span class="map-time">0:20</span></button></li>
+          <li><button type="button" data-jump="6"><span class="map-num">06</span><span class="map-word">Validación</span><span class="map-time">0:20</span></button></li>
+          <li><button type="button" data-jump="7"><span class="map-num">07</span><span class="map-word">ASK</span><span class="map-time">0:20</span></button></li>
+          <li><button type="button" data-jump="8"><span class="map-num">08</span><span class="map-word">Impacto</span><span class="map-time">0:15</span></button></li>
+        </ol>
+        <p class="cover-footer">Tiempo total sugerido: <strong>3:10</strong> · Andrés Melgar, CEO</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="1" data-accent="moss" data-seconds="20">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">01 · HOOK</span>
+            <span class="timing-chip">0:20</span>
+          </div>
+          <h2 class="slide-word">Botella</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Una botella puede generar valor para todos.</p>
+          <blockquote class="pitch-quote">“Imaginen una botella de plástico. La usamos unos minutos, pero puede permanecer cientos de años contaminando el planeta. Ahora imaginen que esa misma botella pudiera convertirse en datos para una empresa, en ingresos para un reciclador y en una recompensa para quien decidió reciclarla. Eso es Verdex.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="flow-hook">
+            <div class="flow-node"><svg viewBox="0 0 24 40" aria-hidden="true"><use href="#icon-bottle"></use></svg>Botella</div>
+            <span class="flow-glyph-arrow" aria-hidden="true">→</span>
+            <div class="flow-branches">
+              <div class="flow-node">Datos</div>
+              <div class="flow-node">Ingresos</div>
+              <div class="flow-node">Recompensa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="2" data-accent="teal" data-seconds="10">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">02 · PRESENTACIÓN</span>
+            <span class="timing-chip">0:10</span>
+          </div>
+          <h2 class="slide-word">Quién soy</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Quién soy.</p>
+          <blockquote class="pitch-quote">“Buenas tardes. Mi nombre es Andrés Melgar y soy el CEO de Verdex.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="flow-node" style="max-width:14rem;">
+            <strong style="font-family:var(--font-display);font-size:1.2rem;">Andrés Melgar</strong>
+            <span style="color:var(--muted);">CEO · Verdex</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="3" data-accent="rust" data-seconds="30">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">03 · PROBLEMA</span>
+            <span class="timing-chip">0:30</span>
+          </div>
+          <h2 class="slide-word">Sistema roto</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">El problema no es el reciclaje, es el sistema.</p>
+          <blockquote class="pitch-quote">“En Bolivia miles de toneladas de residuos reciclables terminan cada año en rellenos sanitarios. El verdadero problema es que el sistema está desconectado.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="problem-row">
+            <div class="problem-card"><strong>Personas</strong><span>No tienen incentivos.</span></div>
+            <svg class="broken-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 L10 10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M14 14 L20 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+            <div class="problem-card"><strong>Empresas</strong><span>No tienen datos para medir su impacto.</span></div>
+            <svg class="broken-glyph" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4 L10 10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path><path d="M14 14 L20 20" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path></svg>
+            <div class="problem-card"><strong>Recicladores</strong><span>Trabajan con poca digitalización.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="4" data-accent="moss" data-seconds="35">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">04 · SOLUCIÓN</span>
+            <span class="timing-chip">0:35</span>
+          </div>
+          <h2 class="slide-word">Ecosistema Verdex</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Conectamos todo en un mismo ecosistema.</p>
+          <blockquote class="pitch-quote">“En Verdex conectamos a estos tres actores mediante una plataforma tecnológica.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="ecosystem">
+            <div class="eco-spine">
+              <div class="eco-hub"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>VERDEX</div>
+            </div>
+            <div class="eco-rows">
+              <div class="eco-row"><span class="eco-actor">Usuarios reciclan</span><span class="eco-connector"></span><span class="eco-outcome">Recompensas</span></div>
+              <div class="eco-row"><span class="eco-actor">Empresas</span><span class="eco-connector"></span><span class="eco-outcome">Dashboard ESG</span></div>
+              <div class="eco-row"><span class="eco-actor">Recicladores</span><span class="eco-connector"></span><span class="eco-outcome">Digitalización</span></div>
+            </div>
+          </div>
+        </div>
+        <p class="pull-quote">“Transformamos residuos en datos, datos en impacto e impacto en valor.”</p>
+      </div>
+    </section>
+
+    <section class="slide" data-index="5" data-accent="amber" data-seconds="20">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">05 · MODELO DE NEGOCIO</span>
+            <span class="timing-chip">0:20</span>
+          </div>
+          <h2 class="slide-word">Modelo B2B</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Nuestro cliente paga por el valor generado.</p>
+          <blockquote class="pitch-quote">“Nuestro modelo de negocio está enfocado en empresas, mediante suscripciones al Dashboard ESG, campañas de sostenibilidad y alianzas estratégicas.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="flywheel">
+            <div class="fw-step">Empresas participan</div>
+            <span class="fw-arrow" aria-hidden="true">→</span>
+            <div class="fw-step">Usuarios reciben mejores incentivos</div>
+            <span class="fw-arrow" aria-hidden="true">→</span>
+            <div class="fw-step">Usuarios reciclan más</div>
+            <span class="fw-arrow" aria-hidden="true">→</span>
+            <div class="fw-step">Empresas obtienen más valor</div>
+            <div class="fw-loop">↻ retroalimenta a “empresas participan”</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="6" data-accent="amber" data-seconds="20">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">06 · VALIDACIÓN</span>
+            <span class="timing-chip">0:20</span>
+          </div>
+          <h2 class="slide-word">Validación</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Ya demostramos que esto puede funcionar.</p>
+          <blockquote class="pitch-quote">“Hoy contamos con un MVP funcional, estamos validando con usuarios, desarrollando pilotos y ya demostramos nuestro potencial al ganar la Feria de Innovación de la UPSSA y clasificar como finalistas nacionales de ElevateU.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="badge-grid">
+            <div class="achievement"><div class="medal status">MVP</div><div><div class="achievement-title">MVP funcional</div><div class="achievement-sub">Validando con usuarios · pilotos en desarrollo</div></div></div>
+            <div class="achievement"><div class="medal">01</div><div><div class="achievement-title">Feria de Innovación UPSSA</div><div class="achievement-sub">Ganador</div></div></div>
+            <div class="achievement"><div class="medal">02</div><div><div class="achievement-title">ElevateU</div><div class="achievement-sub">Finalista nacional</div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="7" data-accent="teal" data-seconds="20">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">07 · ASK</span>
+            <span class="timing-chip">0:20</span>
+          </div>
+          <h2 class="slide-word">ASK</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Pedimos exactamente lo que necesitamos para crecer.</p>
+          <p class="stage-cue">[pausa antes de esta frase]</p>
+          <blockquote class="pitch-quote">“Nuestro ASK es claro: buscamos empresas para desarrollar pilotos, aliados estratégicos que quieran construir este ecosistema y mentores que nos ayuden a validar y escalar Verdex.”</blockquote>
+        </div>
+        <div class="slide-visual">
+          <div class="ask-list">
+            <div class="ask-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><line x1="12" y1="12" x2="19" y2="5" stroke="currentColor" stroke-width="1.6" marker-end="url(#arrow)"></line></svg><strong>Empresas</strong><span style="color:var(--muted);font-size:.85rem;">para desarrollar pilotos</span></div>
+            <div class="ask-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><line x1="12" y1="12" x2="19" y2="5" stroke="currentColor" stroke-width="1.6" marker-end="url(#arrow)"></line></svg><strong>Aliados estratégicos</strong><span style="color:var(--muted);font-size:.85rem;">para construir el ecosistema</span></div>
+            <div class="ask-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="none" stroke="currentColor" stroke-width="1.6"></circle><line x1="12" y1="12" x2="19" y2="5" stroke="currentColor" stroke-width="1.6" marker-end="url(#arrow)"></line></svg><strong>Mentores</strong><span style="color:var(--muted);font-size:.85rem;">para validar y escalar</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" data-index="8" data-accent="moss" data-seconds="15">
+      <div class="slide-inner">
+        <div>
+          <div class="badge-row">
+            <svg class="badge-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#icon-chase"></use></svg>
+            <span class="slide-kicker">08 · CIERRE</span>
+            <span class="timing-chip">0:15</span>
+          </div>
+          <h2 class="slide-word">Impacto</h2>
+          <p class="idea-eyebrow">IDEA</p>
+          <p class="idea-line">Dejar una frase memorable.</p>
+          <p class="pull-quote" style="border-top:none;padding-top:0;">“Porque en Verdex creemos que el reciclaje no debería medirse solo en toneladas recuperadas, sino en el impacto que somos capaces de generar.”</p>
+          <p style="font-family:var(--font-display);font-size:1.3rem;margin-top:.8rem;">Muchas gracias.</p>
+        </div>
+        <div class="slide-visual">
+          <div class="qr-card">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAlgAAAJYAQMAAACEqAqfAAAABlBMVEX///8AAABVwtN+AAAACXBIWXMAAA7EAAAOxAGVKw4bAAACPElEQVR4nO3csXHjMBAFUGgcOFQJKoWlUaWpFJWgUIHHOJsgQICkRtkRd/N+Zhj7EO5gSSoEEekn57jNc/rPJf8ZwinGr7z7HsKwU/NgsVgsFut46x7qfExWOuI2r52qomRdm5ozi8VisVi9WMO88TtbYeqPyZqWf/LZWhl/slgsFovVs3XeKYqpgsVisVisf8oKb+aYLBaLxWJ1alXZzjHjkro/VmGxWCwWqw9rk+e6EW6vgpuwWCwWi3W09TqXqT+Ov3e+lM93FSwWi8ViHWm1/TE1wpJkVW2zPSKNN5cjWCwWi8U60ioZl0YYqvHmOB+xXc5rLBaLxWJ1Y12m7nddBpYp92aOGfJ3AXHZHXN/jIVjsVgsFutIK+SnbWFJaYQ59VUw7uxmsVgsFutoa3OLS0WP3DZzvnJdtVx3UxaLxWKxurHC+hZXHXFqrdvr53wsFovFYh1sDVN19SOR7ZO71fIQS5o5JovFYrFYXVjXpj+2Vkq9PP5urV9DYbFYLBarJ2vK6ruAMB8Rq58qyfnOn3UvJIvFYrFYh1kvcs7WuDyye+5PPd+GxWKxWKy/YrUdL2VVlOeYZXnY+YrgwWKxWCzW8VZVFNpb3DBvrAeWZff0n5fvrrBYLBaLdYxVFZXLXcp1mWNuUvoji8VisVi9W7f1z2+F6buAvSMeLBaLxWL1bOWiFy+W1ONNFovFYrH6sKoUa3PEXtL7JiwWi8Vi9WFtUvrjbfZLI0wZdmpYLBaLxfqfLBHpJX8A8CBfse+f2u8AAAAASUVORK5CYII=" alt="Código QR hacia verdex-henna.vercel.app" width="168" height="168">
+            <div>
+              <span class="qr-label">Conoce la plataforma</span>
+              <span class="qr-url">verdex-henna.vercel.app</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <p class="deck-hint">← → para navegar · 1–9 salto directo · Inicio / Fin</p>
+  <div class="deck-bottombar">
+    <button class="nav-btn" id="btn-prev" type="button" aria-label="Anterior">‹</button>
+    <ol class="dot-nav" id="dot-nav">
+      <li><button type="button" data-jump="1" title="Botella"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="2" title="Quién soy"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="3" title="Sistema roto"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="4" title="Ecosistema Verdex"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="5" title="Modelo B2B"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="6" title="Validación"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="7" title="ASK"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+      <li><button type="button" data-jump="8" title="Impacto"><svg viewBox="0 0 32 32"><use href="#icon-chase"></use></svg></button></li>
+    </ol>
+    <button class="nav-btn" id="btn-next" type="button" aria-label="Siguiente">›</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('#dot-nav button'));
+  var total = slides.length;
+  var current = 0;
+  var durations = [0,20,10,30,35,20,20,20,15];
+  var totalSeconds = durations.reduce(function(a,b){ return a+b; }, 0);
+
+  function fmt(s){
+    var m = Math.floor(s/60), r = s%60;
+    return m + ':' + (r < 10 ? '0' : '') + r;
+  }
+  function cumulative(i){
+    var sum = 0;
+    for (var k=1; k<=i; k++){ sum += durations[k] || 0; }
+    return sum;
+  }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+
+  function render(){
+    slides.forEach(function(sl, i){
+      var active = i === current;
+      sl.classList.toggle('is-active', active);
+      sl.setAttribute('aria-hidden', active ? 'false' : 'true');
+    });
+    dots.forEach(function(d){
+      var idx = parseInt(d.getAttribute('data-jump'), 10);
+      var on = idx === current;
+      d.classList.toggle('is-active', on);
+      d.setAttribute('aria-current', on ? 'true' : 'false');
+    });
+    document.getElementById('progress-fill').style.width = (current/(total-1)*100) + '%';
+    document.getElementById('meta-count').textContent = pad(current) + ' / ' + pad(total-1);
+    document.getElementById('meta-time').textContent = fmt(cumulative(current)) + ' / ' + fmt(totalSeconds);
+    document.getElementById('btn-prev').disabled = current === 0;
+    document.getElementById('btn-next').disabled = current === total - 1;
+  }
+
+  function goTo(i){
+    current = Math.max(0, Math.min(total - 1, i));
+    render();
+  }
+
+  document.getElementById('btn-prev').addEventListener('click', function(){ goTo(current-1); });
+  document.getElementById('btn-next').addEventListener('click', function(){ goTo(current+1); });
+  Array.prototype.slice.call(document.querySelectorAll('[data-jump]')).forEach(function(el){
+    el.addEventListener('click', function(){ goTo(parseInt(el.getAttribute('data-jump'), 10)); });
+  });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){ e.preventDefault(); goTo(current+1); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp'){ e.preventDefault(); goTo(current-1); }
+    else if (e.key === 'Home'){ goTo(0); }
+    else if (e.key === 'End'){ goTo(total-1); }
+    else if (/^[1-9]$/.test(e.key)){ goTo(parseInt(e.key, 10)); }
+  });
+
+  var touchStartX = null;
+  var stage = document.getElementById('stage');
+  stage.addEventListener('touchstart', function(e){ touchStartX = e.changedTouches[0].clientX; }, {passive:true});
+  stage.addEventListener('touchend', function(e){
+    if (touchStartX === null) return;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50){ dx < 0 ? goTo(current+1) : goTo(current-1); }
+    touchStartX = null;
+  }, {passive:true});
+
+  render();
+})();
+</script>

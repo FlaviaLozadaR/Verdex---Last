@@ -4276,3 +4276,180 @@ footer {
     min-height: 220px;
   }
 }
+
+/* ============ Sidebar role-switch widget (empresa demo) ============ */
+.sb-role {
+  margin: 8px 4px 10px;
+  background: var(--amber-soft);
+  border: 1px solid color-mix(in oklch, var(--amber) 35%, transparent);
+  border-radius: 14px;
+  padding: 14px 12px 12px;
+}
+.sb-role-title {
+  font-family: var(--serif); font-size: 13px; font-weight: 400;
+  letter-spacing: -0.01em; color: var(--amber-deep); margin-bottom: 6px;
+}
+.sb-role-desc {
+  font-family: var(--mono); font-size: 9px; color: var(--ink-3);
+  line-height: 1.4; margin: 0 0 10px;
+}
+.sb-role-btn {
+  width: 100%; padding: 8px 10px;
+  background: var(--amber-deep); color: #fff;
+  border: 0; border-radius: 9px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.01em;
+  cursor: pointer; transition: background .15s;
+}
+.sb-role-btn:hover { background: color-mix(in oklch, var(--amber-deep) 85%, black); }
+
+/* Onboarding empresa demo variant */
+.login-demo-btn-empresa { color: var(--amber-deep); }
+.login-demo-btn-empresa:hover { color: var(--amber-deep); }
+
+/* ============ Empresa dashboard ============ */
+.emp-page { max-width: 760px; }
+.emp-greeting { margin-bottom: 18px; }
+.emp-hello {
+  font-family: var(--serif); font-size: 28px; letter-spacing: -0.01em; color: var(--ink);
+}
+.emp-hello em { font-style: normal; color: var(--green); }
+.emp-sub { font-size: 14px; color: var(--ink-3); margin-top: 4px; }
+
+.emp-period { display: flex; gap: 8px; margin-bottom: 16px; }
+.emp-period-btn {
+  padding: 7px 14px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  border-radius: 999px;
+  font-size: 12px; color: var(--ink-2);
+  font-family: var(--mono);
+  cursor: pointer;
+  transition: all .15s;
+}
+.emp-period-btn:hover { border-color: var(--green); color: var(--ink); }
+.emp-period-btn.active {
+  background: var(--green); border-color: var(--green); color: #fff;
+}
+
+.emp-hero { margin-bottom: 8px; }
+.emp-hero-delta {
+  margin-top: 6px;
+  font-family: var(--mono); font-size: 12px;
+  color: var(--green-bright);
+}
+.emp-hero-badge {
+  margin-top: 16px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.16);
+  padding: 6px 12px; border-radius: 999px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.03em;
+}
+.emp-hero-badge svg { width: 14px; height: 14px; }
+
+.emp-chart-unit {
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.emp-chart {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 20px 16px 14px;
+}
+.emp-bar-col { display: flex; flex-direction: column; align-items: center; }
+.emp-bar-track {
+  width: 100%; max-width: 34px;
+  height: 110px;
+  background: var(--bg-2);
+  border-radius: 8px;
+  display: flex; align-items: flex-end;
+  overflow: hidden;
+}
+.emp-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--green-bright), var(--green));
+  border-radius: 8px 8px 0 0;
+  transition: height .5s cubic-bezier(.2,.7,.2,1);
+}
+.emp-bar-v {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-2);
+  margin-top: 6px;
+}
+.emp-bar-m {
+  font-family: var(--mono); font-size: 10px; color: var(--ink-3);
+  text-transform: uppercase; margin-top: 2px;
+}
+
+.emp-rank-list {
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.emp-rank-row {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.emp-rank-row:last-child { border-bottom: 0; }
+.emp-rank-pos {
+  font-family: var(--mono); font-size: 12px; color: var(--ink-3);
+  text-align: center;
+}
+.emp-rank-nm { font-size: 13px; color: var(--ink); margin-bottom: 5px; }
+.emp-rank-bar {
+  height: 5px; background: var(--bg-2); border-radius: 999px; overflow: hidden;
+}
+.emp-rank-bar i {
+  display: block; height: 100%;
+  background: var(--green);
+  border-radius: 999px;
+}
+.emp-rank-kg {
+  font-family: var(--mono); font-size: 13px; color: var(--ink-2); white-space: nowrap;
+}
+.emp-rank-kg span { color: var(--ink-3); font-size: 10px; }
+
+.emp-report {
+  margin-top: 22px;
+  display: flex; align-items: center; gap: 14px;
+  background: var(--amber-soft);
+  border: 1px solid color-mix(in oklch, var(--amber) 35%, transparent);
+  border-radius: 16px;
+  padding: 16px 18px;
+  flex-wrap: wrap;
+}
+.emp-report-ic { color: var(--amber-deep); flex-shrink: 0; }
+.emp-report-info { flex: 1; min-width: 160px; }
+.emp-report-title { font-family: var(--serif); font-size: 16px; color: var(--ink); }
+.emp-report-desc { font-family: var(--mono); font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+.emp-report-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 10px 16px;
+  background: var(--amber-deep); color: #fff;
+  border: 0; border-radius: 10px;
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background .15s;
+}
+.emp-report-btn:hover { background: color-mix(in oklch, var(--amber-deep) 85%, black); }
+
+.emp-switch-link {
+  display: block; margin: 22px auto 8px;
+  background: transparent; border: 0;
+  font-family: var(--mono); font-size: 11px; color: var(--ink-3);
+  text-decoration: underline; text-underline-offset: 3px;
+  cursor: pointer;
+}
+.emp-switch-link:hover { color: var(--green); }
+
+@media (max-width: 640px) {
+  .emp-chart { grid-template-columns: repeat(6, 1fr); padding: 16px 8px 12px; gap: 4px; }
+  .emp-bar-track { height: 80px; }
+  .emp-hello { font-size: 22px; }
+}

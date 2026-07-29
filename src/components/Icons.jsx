@@ -13,4 +13,5 @@ export const Icons = {
   trophy: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M8 4h8v6a4 4 0 01-8 0V4zM6 4H4v3a3 3 0 003 3M18 4h2v3a3 3 0 01-3 3M10 16h4v3h2l1 2H7l1-2h2v-3z" strokeLinejoin="round"/></svg>,
   leaf: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 19c0-9 6-15 15-15 0 9-6 15-15 15zM5 19l8-8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   campus: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>,
+  building: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="4" y="3" width="12" height="18" rx="1"/><path d="M16 9h4v12h-4" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.5 7h1M11.5 7h1M7.5 11h1M11.5 11h1M7.5 15h1M11.5 15h1" strokeLinecap="round"/></svg>,
 }

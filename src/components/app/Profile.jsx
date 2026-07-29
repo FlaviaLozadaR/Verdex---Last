@@ -23,7 +23,9 @@ function fmtDate(ts) {
   return `${diff} días atrás`
 }
 
-export default function Profile({ state, onLogout, onReset }) {
+const IcSwitch  = () => <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h10l-3-3M16 13H6l3 3"/></svg>
+
+export default function Profile({ state, onLogout, onReset, onSwitchRole }) {
   const [filter, setFilter] = useState('todos')
   const initial = state.name?.[0]?.toUpperCase() || 'V'
   const lv = levelFor(state.points)
@@ -225,6 +227,7 @@ export default function Profile({ state, onLogout, onReset }) {
           { ic: <IcLock/>,   nm: 'Seguridad',         desc: 'Contraseña y acceso',          action: null },
           { ic: <IcBell/>,   nm: 'Notificaciones',    desc: 'Preferencias y alertas',       action: null },
           { ic: <IcGlobe/>,  nm: 'Idioma',            desc: 'Español',                      action: null },
+          { ic: <IcSwitch/>, nm: state.role === 'empresa' ? 'Cambiar a vista usuario' : 'Cambiar a vista empresa', desc: 'Alterna el modo de la cuenta (demo)', action: onSwitchRole },
           { ic: <IcLogout/>, nm: 'Cerrar sesión',     desc: 'Salir de tu cuenta',           action: onLogout, danger: true },
         ].map((item, i) => (
           <button key={i} className={'pf-account-row' + (item.danger ? ' danger' : '')} onClick={item.action || undefined}>
